@@ -162,11 +162,15 @@
   sendBtn.addEventListener('click', async () => {
     const name = document.getElementById('guestName').value.trim();
     const wish = document.getElementById('guestWish').value.trim();
+    const spinner = document.getElementById('loadingSpinner');
 
     if (!name || !wish) {
       alert("Vui lòng nhập đầy đủ tên và lời chúc!");
       return;
     }
+
+    spinner.style.display = "block";  
+    sendBtn.disabled = true;          
 
     try {
       const url = "https://script.google.com/macros/s/AKfycbxszX8AOC4CME91s-mxDH5VIYMJRnBsJ4rMVFPlVVIQ2IY4sfBNAecyHfOhl3oXYN-IRw/exec" +
@@ -186,6 +190,9 @@
       }
     } catch (err) {
       alert("Không thể gửi lời chúc. Vui lòng thử lại!");
+    } finally {
+      spinner.style.display = "none"; 
+      sendBtn.disabled = false;       
     }
   });
 </script>
