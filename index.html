@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Thiệp mời tốt nghiệp</title>
+  <style>
+    :root{
+      --accent:#5B21B6;
+      --bg:linear-gradient(135deg,#f7f7fb 0%,#fff 40%);
+      --card-bg: rgba(255,255,255,0.75);
+      --soft:#6b7280;
+      --shadow: 0 10px 30px rgba(16,24,40,0.08);
+      --radius:18px;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;min-height:100vh;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:36px;color:#0f172a}
+
+    .wrap{width:100%;max-width:980px;display:grid;grid-template-columns:1fr 420px;gap:28px;align-items:center}
+    .hero{padding:36px;border-radius:22px;background:var(--card-bg);backdrop-filter:blur(6px);box-shadow:var(--shadow);}
+    .logo{display:flex;gap:12px;align-items:center}
+    .badge{width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,var(--accent),#ef4444);display:flex;align-items:center;justify-content:center;color:white;font-weight:700}
+    h1{margin:18px 0 4px;font-size:28px}
+    p.lead{margin:0;color:var(--soft)}
+
+    .card{background:linear-gradient(180deg,rgba(255,255,255,0.8),rgba(245,247,250,0.6));border-radius:16px;padding:20px;margin-top:22px}
+
+    .invitation{display:flex;flex-direction:column;gap:10px;margin-top:16px}
+    .names{font-family:Georgia, 'Times New Roman', serif;font-size:26px;color:var(--accent)}
+    .meta{color:var(--soft)}
+
+    .controls{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
+    button, .btn{border:0;padding:10px 14px;border-radius:10px;cursor:pointer;font-weight:600}
+    .btn-primary{background:var(--accent);color:white}
+    .btn-ghost{background:transparent;border:1px solid rgba(15,23,42,0.06)}
+
+    .side{padding:28px;border-radius:22px;background:repeating-linear-gradient(135deg,rgba(250,250,255,0.9),rgba(250,250,255,0.9) 20px, rgba(245,245,250,0.7) 20px);box-shadow:var(--shadow)}
+    .preview{height:420px;border-radius:12px;overflow:hidden;background-image:linear-gradient(180deg,rgba(91,33,182,0.06),rgba(239,68,68,0.03));display:flex;align-items:center;justify-content:center;flex-direction:column;padding:22px}
+    .preview .title{font-size:20px;font-weight:700;color:var(--accent)}
+    .preview .sub{color:var(--soft)}
+
+    .wish-modal{position:fixed;left:0;top:0;width:100%;height:100%;display:none;align-items:center;justify-content:center;background:rgba(2,6,23,0.45);z-index:60}
+    .wish-card{width:100%;max-width:520px;background:white;padding:20px;border-radius:12px;box-shadow:0 20px 50px rgba(2,6,23,0.4)}
+    label{display:block;margin-top:12px;font-size:13px;color:#111827}
+    input[type=text],textarea{width:100%;padding:10px;border-radius:8px;border:1px solid #e6e7eb;margin-top:6px}
+
+    .top-actions{display:flex;gap:10px;align-items:center;justify-content:space-between}
+    .muted{color:var(--soft);font-size:13px}
+
+    footer{margin-top:18px;color:var(--soft);font-size:13px}
+
+    @media (max-width:900px){
+      .wrap{grid-template-columns:1fr;}
+      .side{order:-1}
+      .preview{height:320px}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <main class="hero">
+      <div class="logo">
+        <div class="badge">TN</div>
+        <div>
+          <div class="muted">Thiệp mời</div>
+          <h1 contenteditable id="title">Thiệp mời tốt nghiệp</h1>
+          <p class="lead" contenteditable id="subtitle">Xin trân trọng kính mời quý thầy cô, gia đình và bạn bè đến dự lễ tốt nghiệp.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="invitation">
+          <div class="muted">Người mời</div>
+          <div class="names" contenteditable id="name">Nguyễn Văn A</div>
+
+          <div class="muted">Sự kiện</div>
+          <div class="meta" contenteditable id="event">Lễ tốt nghiệp - Đại học Bách Khoa Hà Nội</div>
+
+          <div class="muted">Thời gian & địa điểm</div>
+          <div class="meta" contenteditable id="time">10:00 sáng, Chủ nhật, 12/10/2025 — Hội trường lớn, HUST</div>
+
+          <div class="controls">
+            <button class="btn btn-primary" id="openWish">Gửi lời chúc</button>
+            <button class="btn btn-ghost" id="printBtn">Tải / In (Print)</button>
+            <button class="btn btn-ghost" id="saveBtn">Lưu cục bộ</button>
+          </div>
+
+          <footer>Chỉnh nội dung trực tiếp trên thiệp. Khách có thể gửi tên và lời chúc để lưu vào Google Sheets.</footer>
+        </div>
+      </div>
+    </main>
+
+    <aside class="side">
+      <div class="preview" id="preview">
+        <div class="title" id="pvTitle">Thiệp mời tốt nghiệp</div>
+        <div class="sub" id="pvSubtitle">Xin mời đến dự lễ tốt nghiệp</div>
+        <div style="height:16px"></div>
+        <div class="names" id="pvName">Nguyễn Văn A</div>
+        <div style="height:8px"></div>
+        <div class="meta" id="pvMeta">10:00 — 12/10/2025 — Hội trường lớn</div>
+      </div>
+
+      <div style="margin-top:14px">
+        <div class="muted">Hướng dẫn</div>
+        <ol style="padding-left:16px;margin-top:8px">
+          <li>Click vào nội dung để chỉnh sửa.</li>
+          <li>Nhấn "Lưu cục bộ" để lưu bản nháp trong trình duyệt.</li>
+          <li>Khách bấm "Gửi lời chúc" để gửi tên và lời chúc của họ.</li>
+        </ol>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Wish modal -->
+  <div class="wish-modal" id="wishModal">
+    <div class="wish-card">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <h3 style="margin:0">Gửi lời chúc</h3>
+        <button id="closeWish" class="btn">✕</button>
+      </div>
+      <p class="muted">Điền tên và lời chúc để gửi đến sổ lưu niệm.</p>
+      <label for="guestName">Tên</label>
+      <input type="text" id="guestName" placeholder="Tên của bạn" />
+      <label for="guestWish">Lời chúc</label>
+      <textarea id="guestWish" rows="3" placeholder="Nhập lời chúc..."></textarea>
+      <div style="display:flex;gap:10px;margin-top:14px;justify-content:flex-end">
+        <button id="sendWish" class="btn btn-primary">Gửi</button>
+        <button id="cancelWish" class="btn btn-ghost">Hủy</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const fields = ['title','subtitle','name','event','time'];
+    function updatePreview(){
+      document.getElementById('pvTitle').innerText = document.getElementById('title').innerText;
+      document.getElementById('pvSubtitle').innerText = document.getElementById('subtitle').innerText;
+      document.getElementById('pvName').innerText = document.getElementById('name').innerText;
+      document.getElementById('pvMeta').innerText = document.getElementById('time').innerText;
+    }
+    function saveLocal(){
+      const data = {};
+      fields.forEach(f=> data[f] = document.getElementById(f).innerText);
+      localStorage.setItem('invite-data', JSON.stringify(data));
+      alert('Đã lưu vào bộ nhớ trình duyệt.');
+    }
+    function loadLocal(){
+      const raw = localStorage.getItem('invite-data');
+      if(!raw) return;
+      try{const data = JSON.parse(raw); fields.forEach(f=>{ if(data[f]) document.getElementById(f).innerText = data[f] }); updatePreview(); }catch(e){}
+    }
+
+    fields.forEach(f=> document.getElementById(f).addEventListener('input', updatePreview));
+    document.getElementById('saveBtn').addEventListener('click', saveLocal);
+    window.addEventListener('load', ()=>{loadLocal(); updatePreview();});
+
+    document.getElementById('printBtn').addEventListener('click', ()=>{ window.print(); });
+
+    // Wish modal
+    const wishModal = document.getElementById('wishModal');
+    document.getElementById('openWish').addEventListener('click', ()=> wishModal.style.display='flex');
+    document.getElementById('closeWish').addEventListener('click', ()=> wishModal.style.display='none');
+    document.getElementById('cancelWish').addEventListener('click', ()=> wishModal.style.display='none');
+
+    // Replace with your Google Apps Script Web App URL
+    const SCRIPT_URL = "YOUR_WEB_APP_URL";
+
+    document.getElementById('sendWish').addEventListener('click', async ()=>{
+      const name = document.getElementById('guestName').value.trim();
+      const wish = document.getElementById('guestWish').value.trim();
+      if(!name || !wish){alert("Vui lòng nhập tên và lời chúc!");return;}
+      try{
+        const res = await fetch(SCRIPT_URL, {
+          method: "POST",
+          body: JSON.stringify({ name, wish }),
+          headers: {"Content-Type":"application/json"}
+        });
+        if(res.ok){
+          alert("Cảm ơn! Lời chúc của bạn đã được gửi 🎉");
+          document.getElementById('guestName').value="";
+          document.getElementById('guestWish').value="";
+          wishModal.style.display='none';
+        } else {
+          alert("Xin lỗi, gửi không thành công.");
+        }
+      }catch(e){alert("Lỗi kết nối.");}
+    });
+
+    window.addEventListener('keydown', (e)=>{ if((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==='s'){ e.preventDefault(); saveLocal(); }});
+  </script>
+</body>
+</html>
+
