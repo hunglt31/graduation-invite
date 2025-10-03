@@ -90,6 +90,23 @@
       cursor: pointer;
       color: #333;
     }
+
+    /* Spinner */
+    .spinner {
+      display: none;
+      border: 4px solid #f3f3f3; /* Light grey */
+      border-top: 4px solid #ffcc00; /* Yellow */
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 1rem auto;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
   </style>
 </head>
 <body>
@@ -128,6 +145,7 @@
       <input type="text" id="guestName" placeholder="Tên của bạn"/>
       <textarea id="guestWish" placeholder="Lời chúc của bạn..." rows="4"></textarea>
       <button id="sendWish">Gửi</button>
+      <div class="spinner" id="loadingSpinner"></div>
     </div>
   </div>
 
