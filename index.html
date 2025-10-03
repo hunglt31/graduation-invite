@@ -166,7 +166,8 @@
           alert("Có lỗi xảy ra khi gửi, vui lòng thử lại.");
         }
       } catch (err) {
-        alert("Không thể gửi lời chúc. Vui lòng kiểm tra lại đường dẫn Google Script!");
+        console.error(err);
+        alert("Không thể gửi lời chúc. Vui lòng thử lại sau!");
       }
     });
   </script>
