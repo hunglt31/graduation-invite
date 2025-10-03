@@ -159,13 +159,41 @@
   closeModal.onclick = () => modal.style.display = 'none';
   window.onclick = (e) => { if (e.target == modal) modal.style.display = 'none'; }
 
+  // Toast notification function
+  function showToast(message, type = 'success') {
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.innerHTML = `
+      <span class="toast-close">&times;</span>
+      ${message}
+    `;
+    
+    document.body.appendChild(toast);
+    
+    // Show toast
+    setTimeout(() => toast.classList.add('show'), 100);
+    
+    // Auto hide after 4 seconds
+    const autoHide = setTimeout(() => {
+      toast.classList.remove('show');
+      setTimeout(() => document.body.removeChild(toast), 300);
+    }, 4000);
+    
+    // Manual close
+    toast.querySelector('.toast-close').onclick = () => {
+      clearTimeout(autoHide);
+      toast.classList.remove('show');
+      setTimeout(() => document.body.removeChild(toast), 300);
+    };
+  }
+
   sendBtn.addEventListener('click', async () => {
     const name = document.getElementById('guestName').value.trim();
     const wish = document.getElementById('guestWish').value.trim();
     const spinner = document.getElementById('loadingSpinner');
 
     if (!name || !wish) {
-      alert("Vui lòng nhập đầy đủ tên và lời chúc!");
+      showToast("Vui lòng nhập đầy đủ tên và lời chúc!", 'warning');
       return;
     }
 
@@ -181,15 +209,18 @@
       const data = await res.json();
 
       if (data.status === "success") {
-        alert("Cảm ơn bạn! Lời chúc đã được gửi thành công 🎓✨");
+        showToast("🎉 Cảm ơn bạn đã gửi lời chúc! Hùng rất vui và biết ơn!", 'success');
         document.getElementById('guestName').value = "";
         document.getElementById('guestWish').value = "";
-        modal.style.display = 'none';
+
+        setTimeout(() => {
+          modal.style.display = 'none';
+        }, 2000);
       } else {
-        alert("Có lỗi xảy ra: " + data.message);
+        showToast("Có lỗi xảy ra. Vui lòng thử lại!", 'error');
       }
     } catch (err) {
-      alert("Không thể gửi lời chúc. Vui lòng thử lại!");
+      showToast("Không thể gửi lời chúc. Vui lòng thử lại!", 'error');
     } finally {
       spinner.style.display = "none"; 
       sendBtn.disabled = false;       
